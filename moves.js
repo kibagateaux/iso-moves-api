@@ -1,6 +1,6 @@
 var _ = require('underscore')
   , qs = require('querystring')
-  , request = require('request')
+  , request = require('fetch')
   , url = require('url')
 var Moves = module.exports = function(config_obj) {
     if(!(this instanceof Moves)) return new Moves(config_obj)
