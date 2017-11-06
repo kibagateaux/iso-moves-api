@@ -1,5 +1,5 @@
 {
-  "name": "moves",
+  "name": "react-native-moves-api",
   "version": "0.0.3",
   "description": "react native api wrapper for moves app",
   "author": "tyke lewis <tykelewis@gmail.com>",
