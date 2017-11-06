@@ -1,5 +1,5 @@
 var _ = require('underscore')
-  , qs = require('querystring')
+  , qs = require('qs')
   , request = require('fetch')
   , url = require('url')
 var Moves = module.exports = function(config_obj) {
