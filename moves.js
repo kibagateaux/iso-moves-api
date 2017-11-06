@@ -1,6 +1,6 @@
 var _ = require('underscore')
   , qs = require('qs')
-  , request = require('fetch')
+  , axios = require('axios')
   , url = require('url')
 var Moves = module.exports = function(config_obj) {
     if(!(this instanceof Moves)) return new Moves(config_obj)
@@ -12,7 +12,6 @@ var Moves = module.exports = function(config_obj) {
     }
 
     this.config = _.extend(config, config_obj)
-    this.http = request
 
     if(!this.config.client_id) throw new Error('Missing Client ID')
 }
@@ -57,7 +56,9 @@ Moves.prototype.token = function(code, callback) {
     }
     if(this.config.redirect_uri) query.redirect_uri = this.config.redirect_uri
 
-    this.http.post(this.config.oauth_base + '/access_token?' + qs.stringify(query), callback)
+    axios.post(this.config.oauth_base + '/access_token?' + qs.stringify(query))
+        .then((response) => { console.log('moves res', response); callback(response)})
+        .catch((error) => { console.log('axios error', error); throw new Error(error)})
 }
 
 Moves.prototype.refresh_token = function(token, scope, callback) {
@@ -77,7 +78,9 @@ Moves.prototype.refresh_token = function(token, scope, callback) {
     }
     if(scope) query.scope = scope
 
-    this.http.post(this.config.oauth_base + '/access_token?' + qs.stringify(query), callback)
+    axios.post(this.config.oauth_base + '/access_token?' + qs.stringify(query))
+        .then((response) => { console.log('moves res', response); callback(response)})
+        .catch((error) => { console.log('axios error', error); throw new Error(error)})
 }
 
 Moves.prototype.token_info = function(token, callback) {
@@ -87,7 +90,9 @@ Moves.prototype.token_info = function(token, callback) {
         access_token: token
     }
 
-    this.http.get(this.config.oauth_base + '/tokeninfo?' + qs.stringify(query), callback)
+    axios.get(this.config.oauth_base + '/tokeninfo?' + qs.stringify(query))
+        .then((response) => { console.log('moves res', response); callback(response)})
+        .catch((error) => { console.log('axios error', error); throw new Error(error)})
 }
 
 Moves.prototype.get = function(call, access_token, callback) {
@@ -102,6 +107,6 @@ Moves.prototype.get = function(call, access_token, callback) {
         access_token: access_token
     })
 
-    this.http.get(url.format(get_url), callback)
+    axios.get(url.format(get_url), callback)
 
 }
