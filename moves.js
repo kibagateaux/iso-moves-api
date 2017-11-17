@@ -63,22 +63,17 @@ Moves.prototype.token = function(code, callback) {
   })
 }
 
-Moves.prototype.refresh_token = function(token, scope, callback) {
-  if(typeof scope === 'function' && !callback) {
-      callback = scope
-      scope = undefined
-  }
+Moves.prototype.refresh_token = function() {
   if(!token)                         throw new Error('You must include a token')
   if(!this.config.client_secret)     throw new Error('Missing client secret')
-  if(typeof callback !== 'function') throw new Error('Invalid callback')
 
   var query = {
       grant_type: 'refresh_token'
-    , refresh_token: token
+    , refresh_token: this.config.refresh_token
     , client_id: this.config.client_id
     , client_secret: this.config.client_secret
   }
-  if(scope) query.scope = scope
+  if(this.config.scope) query.scope = this.config.scope
 
   return new Promise((resolve, reject) => {
     axios.post(this.config.oauth_base + '/access_token?' + qs.stringify(query))
@@ -103,7 +98,7 @@ Moves.prototype.token_info = function(token, callback) {
 
 Moves.prototype.get = function(call) {
   if(!call) throw new Error('call is required. Please refer to the Moves docs <https://dev.moves-app.com/docs/api>')
-  // if(!access_token) throw new Error('Valid access token is required')
+  if(!this.config.access_token) throw new Error('Valid access token is required')
   
   var get_url = url.parse(this.config.api_base, true)
   , call_url = url.parse(call, true)
@@ -112,7 +107,6 @@ Moves.prototype.get = function(call) {
   _.extend(get_url.query, call_url.query, {
     access_token: this.config.access_token
   })
-  console.log('moves get', url, get_url, this.config.api_base + call);
   
   return new Promise((resolve, reject)=> {
     axios.get(url.format(get_url))
