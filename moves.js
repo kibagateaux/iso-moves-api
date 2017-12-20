@@ -43,10 +43,9 @@ Moves.prototype.authorize = function(options, res) {
   res.end('Redirecting...')
 }
 
-Moves.prototype.token = function(code, callback) {
+Moves.prototype.token = function(code) {
   if(!code)                          throw new Error('You must include a code')
   if(!this.config.client_secret)     throw new Error('Missing client secret')
-  if(typeof callback !== 'function') throw new Error('Invalid callback')
 
   var query = {
       grant_type: 'authorization_code'
@@ -82,7 +81,7 @@ Moves.prototype.refresh_token = function() {
   })
 }
 
-Moves.prototype.token_info = function(token, callback) {
+Moves.prototype.token_info = function(token) {
   if(!token) throw new Error('You must include a token')
 
   var query = {
